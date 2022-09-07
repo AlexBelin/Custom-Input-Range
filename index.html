@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <style type="text/css">
+        :root {
+            --input-range-track-width: 100%;
+            --input-range-track-height: 5px;
+            --input-range-track-border: 1px solid #2497E3;
+            --input-range-track-color: #A1D0FF;
+            --input-range-slider-color: #A1D0FF;
+            --input-range-slider-border: 1px solid #2497E3;
+            --input-range-slider-width: 18px;
+            --input-range-slider-height: 18px;
+            --input-range-slider-border-radius: 25px;
+            --input-range-slider-shadow: 0px 0px 0px #000;
+            --input-range-slider-Y-placement: -7px;
+        }
+        input[type=range] {
+            -webkit-appearance: none;
+            width: var(--input-range-track-width);
+            box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            -webkit-box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        input[type=range]:focus {
+            outline: none;
+        }
+        input[type=range]::-webkit-slider-runnable-track {
+            width: 100%;
+            height: var(--input-range-track-height);
+            cursor: pointer;
+            animate: 0.2s;
+            background: var(--input-range-track-color);
+            border-radius: 1px;
+            border: var(--input-range-track-border);
+        }
+        input[type=range]::-webkit-slider-thumb {
+            box-shadow: var(--input-range-slider-shadow);
+            border: var(--input-range-slider-border);
+            height: var(--input-range-slider-width);
+            width: var(--input-range-slider-height);
+            border-radius: var(--input-range-slider-border-radius);
+            background: var(--input-range-slider-color);
+            cursor: pointer;
+            -webkit-appearance: none;
+            margin-top: var(--input-range-slider-Y-placement);
+        }
+        input[type=range]:focus::-webkit-slider-runnable-track {
+            background: var(--input-range-track-color);
+        }
+        input[type=range]::-moz-range-track {
+            width: 100%;
+            height: var(--input-range-track-height);
+            cursor: pointer;
+            animate: 0.2s;
+            background: var(--input-range-track-color);
+            border-radius: 1px;
+            border: var(--input-range-track-border);
+        }
+        input[type=range]::-moz-range-thumb {
+            box-shadow: var(--input-range-slider-shadow);
+            border: var(--input-range-slider-border);
+            height: var(--input-range-slider-width);
+            width: var(--input-range-slider-height);
+            border-radius: var(--input-range-slider-border-radius);
+            background: var(--input-range-slider-color);
+            cursor: pointer;
+        }
+        input[type=range]::-ms-track {
+            width: 100%;
+            height: var(--input-range-track-height);
+            cursor: pointer;
+            animate: 0.2s;
+            background: transparent;
+            border-color: transparent;
+            color: transparent;
+        }
+        input[type=range]::-ms-thumb {
+            margin-top: 1px;
+            box-shadow: var(--input-range-slider-shadow);
+            border: var(--input-range-slider-border);
+            height: var(--input-range-slider-width);
+            width: var(--input-range-slider-height);
+            border-radius: var(--input-range-slider-border-radius);
+            background: var(--input-range-slider-color);
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    
+    <input class="test" type="range" min="0" max="10" value="10">
+
+    <script>
+        class CustInputRangeSystem {
+            constructor(className, configObj) {
+                this.className = className;
+                this.configObj = configObj;
+                this.inputsRange = [];
+            }
+
+            init() {
+                var inputsDom = Array.from(document.querySelectorAll(this.className));
+                inputsDom.forEach(input => {
+                    var inputRangeObj = new InputRange(this, input);
+                    this.inputsRange.push(inputRangeObj);
+                    inputRangeObj.init();
+                });
+            }
+        }
+
+        class InputRange {
+            constructor(InputRangeSystem, inputDom) {
+                this.InputRangeSystem = InputRangeSystem;
+                this.inputDom = inputDom;
+            }
+
+            init() {
+                this.InputRangeSystem.configObj.minValue ? this.inputDom.setAttribute('min', this.InputRangeSystem.configObj.minValue) : null;
+                this.InputRangeSystem.configObj.maxValue ? this.inputDom.setAttribute('max', this.InputRangeSystem.configObj.maxValue) : null;
+                this.InputRangeSystem.configObj.defaultValue ? this.inputDom.setAttribute('value', this.InputRangeSystem.configObj.defaultValue) : null;
+                this.InputRangeSystem.configObj.displayValue ? this.createWrapper() : null;
+            }
+
+            createWrapper() {
+                this.inputWrapper = document.createElement('div');
+                this.inputWrapper.style.display = 'flex';
+                this.inputDom.parentNode.insertBefore(this.inputWrapper, this.inputDom);
+                this.inputWrapper.appendChild(this.inputDom);
+                this.createCounter();
+            }
+
+            createCounter() {
+                this.inputCounter = document.createElement('div');
+                this.inputCounter.style.width = this.InputRangeSystem.configObj.displayValueStyle.width;
+                this.inputCounter.style.height = this.InputRangeSystem.configObj.displayValueStyle.height;
+                this.inputCounter.style.borderRadius = this.InputRangeSystem.configObj.displayValueStyle.borderRadius;
+                this.inputCounter.style.backgroundColor = this.InputRangeSystem.configObj.displayValueStyle.backgroundColor;
+                this.inputCounter.style.margin = '0 0 0 ' + this.InputRangeSystem.configObj.displayValueStyle.gap;
+                this.inputCounter.style.display = 'flex';
+                this.inputCounter.style.justifyContent = 'center';
+                this.inputCounter.style.alignItems = 'center';
+                this.inputCounter.style.fontSize = this.InputRangeSystem.configObj.displayValueStyle.fontSize;
+                this.inputCounter.style.color = this.InputRangeSystem.configObj.displayValueStyle.colorText;
+                this.inputWrapper.appendChild(this.inputCounter);
+                this.listenEvent();
+                this.inputDom.addEventListener('input', this.listenEvent.bind(this));
+            }
+
+            listenEvent() {
+                this.inputCounter.innerHTML = this.inputDom.value;
+            }
+        }
+    </script>
+
+    <script>
+        var configCustInputRange = {
+            displayValue: true,
+            minValue: 0,
+            maxValue: 10,
+            defaultValue: 5,
+            displayValueStyle: {
+                width: '25px',
+                height: '25px',
+                borderRadius: '50%',
+                backgroundColor: '#333',
+                colorText: '#fff',
+                gap: '4px',
+                fontSize: '16px'
+            }
+        }
+        var testInput = new CustInputRangeSystem('.test', configCustInputRange);
+        testInput.init();
+    </script>
+</body>
+</html>
