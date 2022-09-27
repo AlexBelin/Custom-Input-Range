@@ -210,7 +210,7 @@
                 this.customTrackWrapper.appendChild(this.highTrack);
                 this.customTrackWrapper.appendChild(this.lowTrack);
                 
-                /* Make input[range] to see custom tracks */
+                /* Make input[range] transparent to see custom tracks */
                 this.customTrackStyleBeacon = document.createElement('style');
                 this.customTrackStyleBeacon.innerHTML = ':root {--input-range-track-color: rgba(0, 0, 0, 0);--input-range-track-border: rgba(0, 0, 0, 0);}'
                 document.body.appendChild(this.customTrackStyleBeacon);
