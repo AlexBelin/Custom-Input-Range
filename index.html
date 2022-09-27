@@ -28,12 +28,15 @@
             -webkit-box-sizing: border-box;
             margin: 0;
             padding: 0;
+            position: relative;
+            z-index: 2;
+            background-color: transparent;
         }
         input[type=range]:focus {
             outline: none;
         }
         input[type=range]::-webkit-slider-runnable-track {
-            width: 100%;
+            width: var(--input-range-track-width);
             height: var(--input-range-track-height);
             cursor: pointer;
             animate: 0.2s;
@@ -44,8 +47,8 @@
         input[type=range]::-webkit-slider-thumb {
             box-shadow: var(--input-range-slider-shadow);
             border: var(--input-range-slider-border);
-            height: var(--input-range-slider-width);
-            width: var(--input-range-slider-height);
+            height: var(--input-range-slider-height);
+            width: var(--input-range-slider-width);
             border-radius: var(--input-range-slider-border-radius);
             background: var(--input-range-slider-color);
             cursor: pointer;
@@ -56,7 +59,7 @@
             background: var(--input-range-track-color);
         }
         input[type=range]::-moz-range-track {
-            width: 100%;
+            width: var(--input-range-track-width);
             height: var(--input-range-track-height);
             cursor: pointer;
             animate: 0.2s;
@@ -67,14 +70,14 @@
         input[type=range]::-moz-range-thumb {
             box-shadow: var(--input-range-slider-shadow);
             border: var(--input-range-slider-border);
-            height: var(--input-range-slider-width);
-            width: var(--input-range-slider-height);
+            height: var(--input-range-slider-height);
+            width: var(--input-range-slider-width);
             border-radius: var(--input-range-slider-border-radius);
             background: var(--input-range-slider-color);
             cursor: pointer;
         }
         input[type=range]::-ms-track {
-            width: 100%;
+            width: var(--input-range-track-width);
             height: var(--input-range-track-height);
             cursor: pointer;
             animate: 0.2s;
@@ -86,29 +89,61 @@
             margin-top: 1px;
             box-shadow: var(--input-range-slider-shadow);
             border: var(--input-range-slider-border);
-            height: var(--input-range-slider-width);
-            width: var(--input-range-slider-height);
+            height: var(--input-range-slider-height);
+            width: var(--input-range-slider-width);
             border-radius: var(--input-range-slider-border-radius);
             background: var(--input-range-slider-color);
             cursor: pointer;
+        }
+
+        /*==== Custom Tracks Style ====*/
+        .custom-low-track, .custom-high-track {
+           position: absolute;
+           top: 50%;
+           transform: translate3d(0, -50%, 0);
+           height: 5px;
+        }
+        .custom-low-track {
+           background-color: red;
+           z-index: 1;
+        }
+        .custom-high-track {
+           width: 100%;
+           background-color: #ccc;
+           z-index: 0;
+        }
+
+        /*==== Custom Counter Style ====*/
+        .custom-counter {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            background-color: #333;
+            color: #fff;
+            gap: 4px;
+            font-size: 16px;
         }
     </style>
 </head>
 <body>
     
-    <input class="test" type="range" min="0" max="10" value="10">
+    <input class="test" type="range" min="0" max="10" value="0">
+    <input type="range" min="0" max="10" value="0">
+    <input type="range" min="0" max="10" value="0">
 
     <script>
         class CustInputRangeSystem {
-            constructor(className, configObj) {
-                this.className = className;
+            constructor(inputsSelection, configObj) {
+                this.inputsSelection = Array.from(inputsSelection);
                 this.configObj = configObj;
                 this.inputsRange = [];
             }
 
             init() {
-                var inputsDom = Array.from(document.querySelectorAll(this.className));
-                inputsDom.forEach(input => {
+                this.inputsSelection.forEach(input => {
                     var inputRangeObj = new InputRange(this, input);
                     this.inputsRange.push(inputRangeObj);
                     inputRangeObj.init();
@@ -126,7 +161,9 @@
                 this.InputRangeSystem.configObj.minValue ? this.inputDom.setAttribute('min', this.InputRangeSystem.configObj.minValue) : null;
                 this.InputRangeSystem.configObj.maxValue ? this.inputDom.setAttribute('max', this.InputRangeSystem.configObj.maxValue) : null;
                 this.InputRangeSystem.configObj.defaultValue ? this.inputDom.setAttribute('value', this.InputRangeSystem.configObj.defaultValue) : null;
-                this.InputRangeSystem.configObj.displayValue ? this.createWrapper() : null;
+                this.InputRangeSystem.configObj.displayValue || this.InputRangeSystem.configObj.customTrack ? this.createWrapper() : null;
+                this.InputRangeSystem.configObj.displayValue ? this.createCounter() : null;
+                this.InputRangeSystem.configObj.customTrack ? this.createcustomTrackWrapper() : null;
             }
 
             createWrapper() {
@@ -134,49 +171,64 @@
                 this.inputWrapper.style.display = 'flex';
                 this.inputDom.parentNode.insertBefore(this.inputWrapper, this.inputDom);
                 this.inputWrapper.appendChild(this.inputDom);
-                this.createCounter();
+            }
+
+            createcustomTrackWrapper() {
+                /* Create custom tracks wrapper */
+                this.customTrackWrapper = document.createElement('div');
+                this.customTrackWrapper.style.position = 'relative';
+                this.customTrackWrapper.style.width = '100%';
+                this.inputDom.parentNode.insertBefore(this.customTrackWrapper, this.inputDom);
+
+                /* Create custom low tracks */
+                this.lowTrack = document.createElement('div');
+                this.lowTrack.classList.add('custom-low-track');
+
+                /* Create custom high tracks */
+                this.highTrack = document.createElement('div');
+                this.highTrack.classList.add('custom-high-track');
+                
+                this.customTrackWrapper.appendChild(this.inputDom);
+                this.customTrackWrapper.appendChild(this.highTrack);
+                this.customTrackWrapper.appendChild(this.lowTrack);
+                
+                /* Make input[range] to see custom tracks */
+                this.customTrackStyleBeacon = document.createElement('style');
+                this.customTrackStyleBeacon.innerHTML = ':root {--input-range-track-color: rgba(0, 0, 0, 0);--input-range-track-border: rgba(0, 0, 0, 0);}'
+                document.body.appendChild(this.customTrackStyleBeacon);
+
+                this.customTracklistenEvent();
+                this.inputDom.addEventListener('input', this.customTracklistenEvent.bind(this));
             }
 
             createCounter() {
                 this.inputCounter = document.createElement('div');
-                this.inputCounter.style.width = this.InputRangeSystem.configObj.displayValueStyle.width;
-                this.inputCounter.style.height = this.InputRangeSystem.configObj.displayValueStyle.height;
-                this.inputCounter.style.borderRadius = this.InputRangeSystem.configObj.displayValueStyle.borderRadius;
-                this.inputCounter.style.backgroundColor = this.InputRangeSystem.configObj.displayValueStyle.backgroundColor;
-                this.inputCounter.style.margin = '0 0 0 ' + this.InputRangeSystem.configObj.displayValueStyle.gap;
-                this.inputCounter.style.display = 'flex';
-                this.inputCounter.style.justifyContent = 'center';
-                this.inputCounter.style.alignItems = 'center';
-                this.inputCounter.style.fontSize = this.InputRangeSystem.configObj.displayValueStyle.fontSize;
-                this.inputCounter.style.color = this.InputRangeSystem.configObj.displayValueStyle.colorText;
+                this.inputCounter.classList.add('custom-counter');
                 this.inputWrapper.appendChild(this.inputCounter);
                 this.listenEvent();
                 this.inputDom.addEventListener('input', this.listenEvent.bind(this));
+            }
+
+            customTracklistenEvent() {
+                this.lowTrack.style.width = (this.inputDom.value * 100) / this.inputDom.getAttribute('max') + '%';
             }
 
             listenEvent() {
                 this.inputCounter.innerHTML = this.inputDom.value;
             }
         }
-    </script>
 
-    <script>
+        /*==========================*/
+
         var configCustInputRange = {
-            displayValue: true,
             minValue: 0,
             maxValue: 10,
             defaultValue: 5,
-            displayValueStyle: {
-                width: '25px',
-                height: '25px',
-                borderRadius: '50%',
-                backgroundColor: '#333',
-                colorText: '#fff',
-                gap: '4px',
-                fontSize: '16px'
-            }
+            displayValue: true,
+            displayValueStyle: true,
+            customTrack: true
         }
-        var testInput = new CustInputRangeSystem('.test', configCustInputRange);
+        var testInput = new CustInputRangeSystem(document.querySelectorAll('input[type=range]'), configCustInputRange);
         testInput.init();
     </script>
 </body>
