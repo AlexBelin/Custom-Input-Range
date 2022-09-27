@@ -120,6 +120,7 @@
         .custom-low-track {
            background-color: var(--input-range-custom-low-track-color);
            z-index: 1;
+           transition: background-color 0.3s;
         }
         .custom-high-track {
            width: 100%;
@@ -228,7 +229,11 @@
             }
 
             customTracklistenEvent() {
-                this.lowTrack.style.width = (this.inputDom.value * 100) / this.inputDom.getAttribute('max') + '%';
+                var percentValue = (this.inputDom.value * 100) / this.inputDom.getAttribute('max');
+                this.lowTrack.style.width = percentValue + '%';
+                if(this.InputRangeSystem.configObj.customColorsValues) {
+                    this.lowTrack.style.backgroundColor = this.InputRangeSystem.configObj.customColorsValues[parseInt((this.InputRangeSystem.configObj.customColorsValues.length - 1) * percentValue / 100)];
+                }
             }
 
             listenEvent() {
@@ -243,7 +248,8 @@
             maxValue: 10,
             defaultValue: 5,
             displayValue: true,
-            customTrack: true
+            customTrack: true,
+            customColorsValues: ['red', 'orange', 'yellow', '#cccf00', 'green']
         }
         var testInput = new CustInputRangeSystem(document.querySelectorAll('input[type=range]'), configCustInputRange);
         testInput.init();
