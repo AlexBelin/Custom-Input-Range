@@ -18,8 +18,21 @@
             --input-range-slider-height: 18px;
             --input-range-slider-border-radius: 25px;
             --input-range-slider-shadow: 0px 0px 0px #000;
-            --input-range-slider-Y-placement: -7px;
+            --input-range-slider-Y-placement: -9px;
+            /* Custom Tracks */
+            --input-range-custom-low-track-color: #456ec5;
+            --input-range-custom-high-track-color: #ccc;
+            --input-range-custom-low-track-height: 5px;
+            /* Custom Counter */
+            --input-range-custom-counter-back-color: #333;
+            --input-range-custom-counter-color: white;
+            --input-range-custom-counter-width: 30px;
+            --input-range-custom-counter-height: 30px;
+            --input-range-custom-counter-font-size: 16px;
+            --input-range-custom-counter-gap: 4px;
+            --input-range-custom-counter-border-radius: 50%
         }
+
         input[type=range] {
             -webkit-appearance: none;
             width: var(--input-range-track-width);
@@ -101,30 +114,34 @@
            position: absolute;
            top: 50%;
            transform: translate3d(0, -50%, 0);
-           height: 5px;
+           height: var(--input-range-custom-low-track-height);
         }
         .custom-low-track {
-           background-color: red;
+           background-color: var(--input-range-custom-low-track-color);
            z-index: 1;
         }
         .custom-high-track {
            width: 100%;
-           background-color: #ccc;
+           background-color: var(--input-range-custom-high-track-color);
            z-index: 0;
         }
 
         /*==== Custom Counter Style ====*/
+        .input-range-wrapper {
+            display: flex;
+            align-items: center;
+            gap: var(--input-range-custom-counter-gap);
+        }
         .custom-counter {
             display: flex;
             justify-content: center;
             align-items: center;
-            width: 25px;
-            height: 25px;
-            border-radius: 50%;
-            background-color: #333;
-            color: #fff;
-            gap: 4px;
-            font-size: 16px;
+            width: var(--input-range-custom-counter-width);
+            height: var(--input-range-custom-counter-height);
+            border-radius: var(--input-range-custom-counter-border-radius);
+            background-color: var(--input-range-custom-counter-back-color);
+            color: var(--input-range-custom-counter-color);
+            font-size: var(--input-range-custom-counter-font-size);
         }
     </style>
 </head>
@@ -168,7 +185,7 @@
 
             createWrapper() {
                 this.inputWrapper = document.createElement('div');
-                this.inputWrapper.style.display = 'flex';
+                this.inputWrapper.classList.add('input-range-wrapper');
                 this.inputDom.parentNode.insertBefore(this.inputWrapper, this.inputDom);
                 this.inputWrapper.appendChild(this.inputDom);
             }
@@ -225,7 +242,6 @@
             maxValue: 10,
             defaultValue: 5,
             displayValue: true,
-            displayValueStyle: true,
             customTrack: true
         }
         var testInput = new CustInputRangeSystem(document.querySelectorAll('input[type=range]'), configCustInputRange);
