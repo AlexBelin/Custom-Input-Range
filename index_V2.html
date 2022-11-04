@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <style type="text/css">
+        :root {
+            /* Input Range main bar styles */
+            --input-range-track-width: 100%;
+            --input-range-track-height: 5px;
+            --input-range-track-border: 1px solid #2497E3;
+            --input-range-track-color: #A1D0FF;
+            /* Input Range cursor styles */
+            --input-range-slider-color: #A1D0FF;
+            --input-range-slider-border: 1px solid #2497E3;
+            --input-range-slider-width: 18px;
+            --input-range-slider-height: 18px;
+            --input-range-slider-border-radius: 25px;
+            --input-range-slider-shadow: 0px 0px 0px #000;
+            --input-range-slider-Y-placement: -9px;
+            /* Input Range Custom Tracks styles */
+            --input-range-custom-low-track-color: #456ec5;
+            --input-range-custom-high-track-color: #ccc;
+            /* Input Range Custom Counter styles */
+            --input-range-custom-counter-back-color: #333;
+            --input-range-custom-counter-color: white;
+            --input-range-custom-counter-width: 110px;
+            --input-range-custom-counter-height: 40px;
+            --input-range-custom-counter-font-size: 16px;
+            --input-range-custom-counter-gap: 10px;
+            --input-range-custom-counter-border-radius: 4px;
+        }
+
+        input[type=range] {
+            -webkit-appearance: none;
+            width: var(--input-range-track-width);
+            box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            -webkit-box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            position: relative;
+            z-index: 2;
+            background-color: transparent;
+        }
+        input[type=range]:focus {
+            outline: none;
+        }
+        input[type=range]::-webkit-slider-runnable-track {
+            width: var(--input-range-track-width);
+            height: var(--input-range-track-height);
+            cursor: pointer;
+            animate: 0.2s;
+            background: var(--input-range-track-color);
+            border-radius: 1px;
+            border: var(--input-range-track-border);
+        }
+        input[type=range]::-webkit-slider-thumb {
+            box-shadow: var(--input-range-slider-shadow);
+            border: var(--input-range-slider-border);
+            height: var(--input-range-slider-height);
+            width: var(--input-range-slider-width);
+            border-radius: var(--input-range-slider-border-radius);
+            background: var(--input-range-slider-color);
+            cursor: pointer;
+            -webkit-appearance: none;
+            margin-top: var(--input-range-slider-Y-placement);
+        }
+        input[type=range]:focus::-webkit-slider-runnable-track {
+            background: var(--input-range-track-color);
+        }
+        input[type=range]::-moz-range-track {
+            width: var(--input-range-track-width);
+            height: var(--input-range-track-height);
+            cursor: pointer;
+            animate: 0.2s;
+            background: var(--input-range-track-color);
+            border-radius: 1px;
+            border: var(--input-range-track-border);
+        }
+        input[type=range]::-moz-range-thumb {
+            box-shadow: var(--input-range-slider-shadow);
+            border: var(--input-range-slider-border);
+            height: var(--input-range-slider-height);
+            width: var(--input-range-slider-width);
+            border-radius: var(--input-range-slider-border-radius);
+            background: var(--input-range-slider-color);
+            cursor: pointer;
+        }
+        input[type=range]::-ms-track {
+            width: var(--input-range-track-width);
+            height: var(--input-range-track-height);
+            cursor: pointer;
+            animate: 0.2s;
+            background: transparent;
+            border-color: transparent;
+            color: transparent;
+        }
+        input[type=range]::-ms-thumb {
+            margin-top: 1px;
+            box-shadow: var(--input-range-slider-shadow);
+            border: var(--input-range-slider-border);
+            height: var(--input-range-slider-height);
+            width: var(--input-range-slider-width);
+            border-radius: var(--input-range-slider-border-radius);
+            background: var(--input-range-slider-color);
+            cursor: pointer;
+        }
+
+        /*==== Custom Tracks Style ====*/
+        .custom-tracks-wrapper {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
+        .custom-low-track, .custom-high-track {
+           position: absolute;
+           top: 50%;
+           transform: translate3d(0, -50%, 0);
+           height: var(--input-range-track-height);
+        }
+
+        .custom-low-track {
+           background-color: var(--input-range-custom-low-track-color);
+           z-index: 1;
+           transition: background-color 0.3s;
+        }
+
+        .custom-high-track {
+           width: 100%;
+           background-color: var(--input-range-custom-high-track-color);
+           z-index: 0;
+        }
+
+        /*==== Custom Counter Style ====*/
+        .input-range-wrapper {
+            display: flex;
+            align-items: center;
+            gap: var(--input-range-custom-counter-gap);
+        }
+
+        .custom-counter {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: var(--input-range-custom-counter-width);
+            height: var(--input-range-custom-counter-height);
+            border-radius: var(--input-range-custom-counter-border-radius);
+            background-color: var(--input-range-custom-counter-back-color);
+            color: var(--input-range-custom-counter-color);
+            font-size: var(--input-range-custom-counter-font-size);
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    
+    <div class="smartcapture-controls"><div class="sc-formfield-label">note1 *</div>
+        <div class="sc-formfield-input-wrapper">
+            <div class="sc-formfield-input"><label><input type="radio" name="note1" data-field-type="Text" value="1" required="required" data-validation-message="Please fill out this field.">1</label></div>
+            <div class="sc-formfield-input"><label><input type="radio" name="note1" data-field-type="Text" value="2" required="required" data-validation-message="Please fill out this field.">2</label></div>
+            <div class="sc-formfield-input"><label><input type="radio" name="note1" data-field-type="Text" value="3" required="required" data-validation-message="Please fill out this field.">3</label></div>
+            <div class="sc-formfield-input"><label><input type="radio" name="note1" data-field-type="Text" value="4" required="required" data-validation-message="Please fill out this field.">4</label></div>
+            <div class="sc-formfield-input"><label><input type="radio" name="note1" data-field-type="Text" value="5" required="required" data-validation-message="Please fill out this field.">5</label></div>
+        </div>
+    </div>
+<br><br>
+    <div class="smartcapture-controls"><div class="sc-formfield-label">note2 *</div>
+        <div class="sc-formfield-input-wrapper">
+            <div class="sc-formfield-input"><label><input type="radio" name="note2" data-field-type="Text" value="Pas satisfait" required="required" data-validation-message="Please fill out this field.">Pas satisfait</label></div>
+            <div class="sc-formfield-input"><label><input type="radio" name="note2" data-field-type="Text" value="Peu satisfait" required="required" data-validation-message="Please fill out this field.">Peu satisfait</label></div>
+            <div class="sc-formfield-input"><label><input type="radio" name="note2" data-field-type="Text" value="Satisfait" required="required" data-validation-message="Please fill out this field.">Satisfait</label></div>
+            <div class="sc-formfield-input"><label><input type="radio" name="note2" data-field-type="Text" value="Très satisfait" required="required" data-validation-message="Please fill out this field.">Très satisfait</label></div>
+            <div class="sc-formfield-input"><label><input type="radio" name="note2" data-field-type="Text" value="Très très satisfait" required="required" data-validation-message="Please fill out this field.">Très très satisfait</label></div>
+        </div>
+    </div>
+<br><br>
+    <div class="smartcapture-controls"><div class="sc-formfield-label">note3 *</div>
+        <div class="sc-formfield-input-wrapper">
+            <div class="sc-formfield-input"><label><input type="radio" name="note3" data-field-type="Text" value="1" required="required" data-validation-message="Please fill out this field.">1</label></div>
+            <div class="sc-formfield-input"><label><input type="radio" name="note3" data-field-type="Text" value="2" required="required" data-validation-message="Please fill out this field.">2</label></div>
+            <div class="sc-formfield-input"><label><input type="radio" name="note3" data-field-type="Text" value="3" required="required" data-validation-message="Please fill out this field.">3</label></div>
+            <div class="sc-formfield-input"><label><input type="radio" name="note3" data-field-type="Text" value="4" required="required" data-validation-message="Please fill out this field.">4</label></div>
+            <div class="sc-formfield-input"><label><input type="radio" name="note3" data-field-type="Text" value="5" required="required" data-validation-message="Please fill out this field.">5</label></div>
+            <div class="sc-formfield-input"><label><input type="radio" name="note3" data-field-type="Text" value="6" required="required" data-validation-message="Please fill out this field.">6</label></div>
+            <div class="sc-formfield-input"><label><input type="radio" name="note3" data-field-type="Text" value="7" required="required" data-validation-message="Please fill out this field.">7</label></div>
+            <div class="sc-formfield-input"><label><input type="radio" name="note3" data-field-type="Text" value="8" required="required" data-validation-message="Please fill out this field.">8</label></div>
+        </div>
+    </div>
+
+    <script>
+        
+        class CustomInputRangeSystem {
+            constructor(classTarget, configObj) {
+                this.classTarget = classTarget;
+                this.configObj = configObj;
+                this.classWrapperList = Array.from(document.querySelectorAll(this.classTarget));
+            }
+
+            init() {
+                this.classWrapperList.forEach(wrapper => {
+                    var CustInputRange = new CustomInputRange(wrapper, this);
+                    CustInputRange.init();
+                });
+            }
+        }
+
+        class CustomInputRange {
+            constructor(radiosWrapper, InputRangeSystem) {
+                this.radiosWrapper = radiosWrapper;
+                this.InputRangeSystem = InputRangeSystem;
+                this.inputRadios = Array.from(this.radiosWrapper.querySelectorAll('input'));
+                this.values = [];
+                /* Input range creation */
+                this.inputRange = document.createElement('input');
+                this.inputRange.type = "range";
+                this.inputRange.min = "0";
+                /* Hidden input text creation */
+                this.inputText = document.createElement('input');
+                this.inputText.type = "hidden";
+                this.inputText.name = this.inputRadios[0].name;
+                /* input range wrapper creation */
+                this.inputRangeWrapper = document.createElement('div');
+                this.inputRangeWrapper.classList.add('input-range-wrapper');
+                /* Value label creation */
+                this.inputValueLabel = document.createElement('div');
+                this.inputValueLabel.classList.add('custom-counter');
+                /* Custom Tracks creation */
+            }
+
+            init() {
+                this.inputRadios.forEach(inputRadio => {
+                    this.values.push(inputRadio.value);
+                    inputRadio.parentNode.parentNode.remove();
+                });
+                this.inputRange.max = this.values.length - 1;
+
+                this.eventListener();
+                this.inputRange.addEventListener('input', this.eventListener.bind(this));
+
+                this.inputRangeWrapper.appendChild(this.inputRange);
+                this.inputRangeWrapper.appendChild(this.inputText);
+                this.InputRangeSystem.configObj.displayValue ? this.inputRangeWrapper.appendChild(this.inputValueLabel) : null;
+                this.InputRangeSystem.configObj.customTrack ? this.createcustomTrackWrapper() : null;
+                this.radiosWrapper.appendChild(this.inputRangeWrapper);
+            }
+
+            createcustomTrackWrapper() {
+                /* Create custom tracks wrapper */
+                this.customTrackWrapper = document.createElement('div');
+                this.customTrackWrapper.style.position = 'relative';
+                this.customTrackWrapper.style.width = '100%';
+                this.inputRange.parentNode.insertBefore(this.customTrackWrapper, this.inputRange);
+
+                /* Create custom low track */
+                this.lowTrack = document.createElement('div');
+                this.lowTrack.classList.add('custom-low-track');
+
+                /* Create custom high track */
+                this.highTrack = document.createElement('div');
+                this.highTrack.classList.add('custom-high-track');
+                
+                this.customTrackWrapper.appendChild(this.inputRange);
+                this.customTrackWrapper.appendChild(this.highTrack);
+                this.customTrackWrapper.appendChild(this.lowTrack);
+                
+                /* Make input[range] transparent to see custom tracks */
+                this.customTrackStyleBeacon = document.createElement('style');
+                this.customTrackStyleBeacon.innerHTML = ':root {--input-range-track-color: rgba(0, 0, 0, 0);--input-range-track-border: rgba(0, 0, 0, 0);}'
+                document.body.appendChild(this.customTrackStyleBeacon);
+
+                this.customTracklistenEvent();
+                this.inputRange.addEventListener('input', this.customTracklistenEvent.bind(this));
+            }
+
+            eventListener() {
+                this.inputValueLabel.innerHTML = this.values[this.inputRange.value];
+                this.inputText.value = this.values[this.inputRange.value];
+            }
+
+            customTracklistenEvent() {
+                var percentValue = (this.inputRange.value * 100) / this.inputRange.getAttribute('max');
+                this.lowTrack.style.width = percentValue + '%';
+                if(this.InputRangeSystem.configObj.customColorsValues) {
+                    this.lowTrack.style.backgroundColor = this.InputRangeSystem.configObj.customColorsValues[parseInt((this.InputRangeSystem.configObj.customColorsValues.length - 1) * percentValue / 100)];
+                }
+            }
+        }
+
+        /*==========================*/
+
+        var configCustInputRange = {
+            displayValue: true,
+            customTrack: true,
+            customColorsValues: ['red', 'orange', 'yellow', '#d5d500', 'green']
+        }
+        var testInput = new CustomInputRangeSystem('.sc-formfield-input-wrapper', configCustInputRange);
+        testInput.init();
+
+    </script>
+</body>
+</html>
