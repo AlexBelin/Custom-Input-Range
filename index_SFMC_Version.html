@@ -9,7 +9,6 @@
     <style type="text/css">
         :root {
             /* Input Range main bar styles */
-            --input-range-track-width: 100%;
             --input-range-track-height: 5px;
             --input-range-track-border: 1px solid #2497E3;
             --input-range-track-color: #A1D0FF;
@@ -24,6 +23,9 @@
             /* Input Range Custom Tracks styles */
             --input-range-custom-low-track-color: #456ec5;
             --input-range-custom-high-track-color: #ccc;
+            /* Custom input range wrapper style */
+            --input-range-wrapper-width: 100%;
+            --input-range-wrapper-max-width: 700px;
             /* Input Range Custom Counter styles */
             --input-range-custom-counter-back-color: #333;
             --input-range-custom-counter-color: white;
@@ -36,7 +38,7 @@
 
         input[type=range] {
             -webkit-appearance: none;
-            width: var(--input-range-track-width);
+            width: 100%;
             box-sizing: border-box;
             -moz-box-sizing: border-box;
             -webkit-box-sizing: border-box;
@@ -50,7 +52,7 @@
             outline: none;
         }
         input[type=range]::-webkit-slider-runnable-track {
-            width: var(--input-range-track-width);
+            width: 100%;
             height: var(--input-range-track-height);
             cursor: pointer;
             animate: 0.2s;
@@ -73,7 +75,7 @@
             background: var(--input-range-track-color);
         }
         input[type=range]::-moz-range-track {
-            width: var(--input-range-track-width);
+            width: 100%;
             height: var(--input-range-track-height);
             cursor: pointer;
             animate: 0.2s;
@@ -91,7 +93,7 @@
             cursor: pointer;
         }
         input[type=range]::-ms-track {
-            width: var(--input-range-track-width);
+            width: 100%;
             height: var(--input-range-track-height);
             cursor: pointer;
             animate: 0.2s;
@@ -140,6 +142,8 @@
             display: flex;
             align-items: center;
             gap: var(--input-range-custom-counter-gap);
+            width: var(--input-range-wrapper-width);
+            max-width: var(--input-range-wrapper-max-width);
         }
 
         .custom-counter {
@@ -212,7 +216,7 @@
             constructor(radiosWrapper, InputRangeSystem) {
                 this.radiosWrapper = radiosWrapper;
                 this.InputRangeSystem = InputRangeSystem;
-                this.inputRadios = Array.from(this.radiosWrapper.querySelectorAll('input'));
+                this.inputRadios = Array.from(this.radiosWrapper.querySelectorAll('input[type=radio]'));
                 this.values = [];
                 /* Input range creation */
                 this.inputRange = document.createElement('input');
